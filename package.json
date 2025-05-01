@@ -1,17 +1,17 @@
 {
-  "name": "@akshay-na/express-js-boilerplate",
+  "name": "@akshay-na/linker",
   "version": "1.0.0",
-  "description": "Boilerplate to start a node project",
+  "description": "The Scalable In-Memory Matchmaking Engine is a high-performance, distributed system designed to handle matchmaking for real-time applications such as gaming, dating, and recommendation systems. The goal of this engine is to efficiently match users or entities based on a variety of criteria, ensuring low-latency responses and the ability to scale across thousands or even millions of users.",
   "email": "akshayna04@gmail.com",
   "author": "akshay-na",
   "license": "MIT",
-  "homepage": "https://github.com/akshay-na/express-js-template#readme",
+  "homepage": "https://github.com/akshay-na/scalable-in-memory-matchmaking-engine#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/akshay-na/express-js-template.git"
+    "url": "git+https://github.com/akshay-na/scalable-in-memory-matchmaking-engine.git"
   },
   "bugs": {
-    "url": "https://github.com/akshay-na/express-js-template/issues"
+    "url": "https://github.com/akshay-na/scalable-in-memory-matchmaking-engine/issues"
   },
   "scripts": {
     "dist": "gulp build",
@@ -40,6 +40,9 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+    "dependencies": {
+    "mongoose": "8.14.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
@@ -87,8 +90,5 @@
     "ts-node-dev": "2.0.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3"
-  },
-  "dependencies": {
-    "mongoose": "8.14.1"
   }
 }
