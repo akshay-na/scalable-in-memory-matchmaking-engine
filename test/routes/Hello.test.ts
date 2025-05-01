@@ -1,4 +1,4 @@
-import App from "@/app/BoilerplateApp";
+import App from "@/app/App";
 import request from "supertest";
 
 describe("GET /api/v1/hello", () => {

@@ -1,5 +1,5 @@
 import { ENVIRONMENT } from "@akshay-na/exoframe/lib/common/Environment";
-import App from "../BoilerplateApp";
+import App from "../App";
 
 const PORT = ENVIRONMENT.get("PORT") ?? 8888;
 
