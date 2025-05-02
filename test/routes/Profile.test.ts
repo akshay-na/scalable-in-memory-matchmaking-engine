@@ -27,3 +27,22 @@ describe("POST /api/v1/profile", () => {
     expect(res.body.error.error).toBe("VALIDATION_FAILED");
   });
 });
+
+describe("PUT /api/v1/profile?seed=value", () => {
+  it("should create profile", async () => {
+    const seed = Math.floor(Math.random() * 1000) + 1;
+    const res = await request(app)
+      .put(`/api/v1/profile?seed=${seed.toString()}`)
+      .set("Accept", "application/json");
+    expect(res.status).toBe(200);
+    expect(res.body.data.total).toBe(seed);
+  });
+
+  it("should respond with error when seed number is higher than limit", async () => {
+    const res = await request(app)
+      .put(`/api/v1/profile?seed=10005`)
+      .set("Accept", "application/json");
+    expect(res.status).toBe(400); // Assuming these fields are required
+    expect(res.body.error.error).toBe("VALIDATION_FAILED");
+  });
+});
