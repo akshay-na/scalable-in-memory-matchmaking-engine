@@ -18,7 +18,7 @@ describe("POST /api/v1/profile", () => {
 
   it("should respond with error when required fields are missing", async () => {
     const res = await request(app)
-      .post("/api/v1/hello")
+      .post("/api/v1/profile")
       .send({
         id: "user123", // Missing age, gender, location, and interests
       })
