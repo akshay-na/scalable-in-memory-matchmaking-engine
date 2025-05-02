@@ -88,4 +88,4 @@ export const INTEREST_POOL = [
   "crypto",
   "entrepreneurship",
   "economics",
-];
+] as const;
