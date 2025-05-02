@@ -43,7 +43,9 @@
   },
   "dependencies": {
     "@faker-js/faker": "9.7.0",
-    "mongoose": "8.14.1"
+    "ioredis": "5.6.1",
+    "mongoose": "8.14.1",
+    "redis-memory-server": "0.12.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",

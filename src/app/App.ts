@@ -7,20 +7,25 @@ import {
 } from "@akshay-na/exoframe/lib/express/ExpressBuilder";
 
 import { InMemoryMongoDb } from "../connections/InMemoryMongoDb";
+import { InMemoryRedis } from "../connections/InMemoryRedis";
 import { MongoDBConnection } from "../connections/MongoDB";
+import { RedisConnection } from "../connections/Redis";
 
 //Import Routes
+
 import "./routers/routes/index";
 
 export default class Application {
   private expressBuilder: ExpressBuilder;
   private mongoDBConnection: MongoDBConnection;
+  private redisConnection: RedisConnection;
   private static application: Express;
   private static server: Server;
 
   constructor() {
     this.expressBuilder = new ExpressBuilder();
     this.mongoDBConnection = MongoDBConnection.getInstance();
+    this.redisConnection = RedisConnection.getInstance();
   }
 
   public getInstance(): Express {
@@ -33,9 +38,16 @@ export default class Application {
   public async initialize(): Promise<Express> {
     try {
       await InMemoryMongoDb.getInstance();
+      await InMemoryRedis.getInstance();
+
       this.mongoDBConnection.connect(
         ENVIRONMENT.get("DATABASE_URL") || InMemoryMongoDb.uri
       );
+
+      this.redisConnection.connect(
+        ENVIRONMENT.get("REDIS_URL") || InMemoryRedis.uri
+      );
+
       Application.application = this.expressBuilder.initialize();
       return Application.application;
     } catch (error) {
@@ -49,7 +61,10 @@ export default class Application {
       throw new RuntimeError("App not initialized yet!");
 
     await this.mongoDBConnection.disconnect();
+    await this.redisConnection.disconnect();
+
     await InMemoryMongoDb.stop();
+    await InMemoryRedis.stop();
   }
 
   public startServer(): void {
