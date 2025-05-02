@@ -16,6 +16,7 @@ import {
   META_ERRORS,
   META_ROUTE,
 } from "../decorators/Route";
+import { ConfigurationOptions, ErrorMappingOptions } from "../decorators/types";
 import { sendEnvelope } from "../http/ResponseFormatter";
 import { RouteRegistry } from "./RouteRegistry";
 import { applyGuards, resolveToken } from "./utils";

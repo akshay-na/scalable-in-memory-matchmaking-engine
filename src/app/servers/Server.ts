@@ -21,4 +21,8 @@ const app = new Application();
     console.error("Failed to initialize app:", error);
     process.exit(1); // Exit if initialization fails
   }
-})();
+})()
+  .then()
+  .catch((error) => {
+    console.error(error);
+  });

@@ -22,7 +22,7 @@
     "pre-commit": "npx lint-staged",
     "pre-push": "npm run test:cov",
     "release": "HUSKY_SKIP_HOOKS=1 CI=true npx -y semantic-release --no-verify",
-    "start": "env NODE_ENV=development ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/app/servers/Server.ts",
+    "start": "env NODE_ENV=development ts-node-dev --log-error --pretty --clear --respawn --require tsconfig-paths/register src/app/servers/Server.ts",
     "start:prod": "node dist/app/servers/Server.js",
     "test": "env NODE_ENV=testing jest --detectOpenHandles --coverage",
     "test:watch": "env NODE_ENV=testing jest --watch",
