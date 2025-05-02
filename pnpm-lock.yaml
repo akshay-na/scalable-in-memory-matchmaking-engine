@@ -7,6 +7,9 @@ settings:
 importers:
   .:
     dependencies:
+      "@faker-js/faker":
+        specifier: 9.7.0
+        version: 9.7.0
       mongoose:
         specifier: 8.14.1
         version: 8.14.1
@@ -844,6 +847,13 @@ packages:
         integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==,
       }
     engines: { node: ^18.18.0 || ^20.9.0 || >=21.1.0 }
+
+  "@faker-js/faker@9.7.0":
+    resolution:
+      {
+        integrity: sha512-aozo5vqjCmDoXLNUJarFZx2IN/GgGaogY4TMJ6so/WLZOWpSV7fvj2dmrV6sEAnUm1O7aCrhTibjpzeDFgNqbg==,
+      }
+    engines: { node: ">=18.0.0", npm: ">=9.0.0" }
 
   "@gulpjs/messages@1.1.0":
     resolution:
@@ -9847,6 +9857,8 @@ snapshots:
     dependencies:
       "@eslint/core": 0.13.0
       levn: 0.4.1
+
+  "@faker-js/faker@9.7.0": {}
 
   "@gulpjs/messages@1.1.0": {}
 

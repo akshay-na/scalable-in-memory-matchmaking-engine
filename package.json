@@ -22,8 +22,8 @@
     "pre-commit": "npx lint-staged",
     "pre-push": "npm run test:cov",
     "release": "HUSKY_SKIP_HOOKS=1 CI=true npx -y semantic-release --no-verify",
-    "start": "env NODE_ENV=development ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/app/servers/BoilerplateServer.ts",
-    "start:prod": "node dist/app/servers/BoilerplateServer.js",
+    "start": "env NODE_ENV=development ts-node-dev --respawn --transpile-only --require tsconfig-paths/register src/app/servers/Server.ts",
+    "start:prod": "node dist/app/servers/Server.js",
     "test": "env NODE_ENV=testing jest --detectOpenHandles --coverage",
     "test:watch": "env NODE_ENV=testing jest --watch",
     "test:cov": "env NODE_ENV=testing jest --coverage",
@@ -41,7 +41,8 @@
       "path": "cz-conventional-changelog"
     }
   },
-    "dependencies": {
+  "dependencies": {
+    "@faker-js/faker": "9.7.0",
     "mongoose": "8.14.1"
   },
   "devDependencies": {
