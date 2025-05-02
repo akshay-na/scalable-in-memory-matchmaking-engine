@@ -1,9 +1,11 @@
 import { ENVIRONMENT } from "@akshay-na/exoframe/lib/common/Environment";
+import { RuntimeError } from "@akshay-na/exoframe/lib/common/RuntimeError";
 import {
   Express,
   ExpressBuilder,
   Server,
 } from "@akshay-na/exoframe/lib/express/ExpressBuilder";
+
 import { InMemoryMongoDb } from "./connections/InMemoryMongoDb";
 import { MongoDBConnection } from "./connections/MongoDB";
 
@@ -23,7 +25,7 @@ export default class Application {
 
   public getInstance(): Express {
     if (!Application.application) {
-      throw new Error("App not initialized yet!");
+      throw new RuntimeError("App not initialized yet!");
     }
     return Application.application;
   }
@@ -42,6 +44,14 @@ export default class Application {
     }
   }
 
+  public async shutdown(): Promise<void> {
+    if (!Application.application)
+      throw new RuntimeError("App not initialized yet!");
+
+    await this.mongoDBConnection.disconnect();
+    await InMemoryMongoDb.stop();
+  }
+
   public startServer(): void {
     if (!Application.application) {
       throw new Error("Application is not initialized!");
@@ -52,31 +62,18 @@ export default class Application {
       console.log(`🚀 API ready on: http://localhost:${PORT}`);
     });
 
-    process.on(
-      "SIGTERM",
-      this.gracefulShutdown.bind(this, Application.application)
-    );
-    process.on(
-      "SIGINT",
-      this.gracefulShutdown.bind(this, Application.application)
-    );
+    process.on("SIGTERM", this.closeServer.bind(this, Application.application));
+    process.on("SIGINT", this.closeServer.bind(this, Application.application));
   }
 
-  public async gracefulShutdown() {
+  public async closeServer() {
     try {
-      console.log("Shutting down gracefully...");
-
       if (Application.server) {
-        Application.server.close(() => {
-          console.log("Express server has been shut down.");
-        });
+        Application.server.close();
       }
 
-      // Gracefully disconnect from MongoDB
-      await this.mongoDBConnection.disconnect();
-      await InMemoryMongoDb.stop();
+      await this.shutdown();
 
-      console.log("Server and services shut down.");
       process.exit(0);
     } catch (error) {
       console.error("Error during shutdown:", error);

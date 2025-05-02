@@ -28,6 +28,7 @@ afterAll(async () => {
   // Teardown after all tests are done
   // Clean up global mocks (if needed)
   // jest.restoreAllMocks(); // Restore any mocked modules or services
+  await application.shutdown();
 });
 
 afterEach(() => {

@@ -59,6 +59,6 @@ export class Profile extends BaseModel {
   }
 }
 
-const ProfileModel = mongoose.model<IProfile>("User", Profile.schema);
+const ProfileModel = mongoose.model<IProfile>("Profile", Profile.schema);
 
 export default ProfileModel;

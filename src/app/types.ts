@@ -1,13 +1,13 @@
 import { LooseObject } from "@akshay-na/exoframe/lib/common/LooseObject";
 
-export type ProfileData = {
+export interface ProfileData {
   id: string;
   age: number;
   gender: string;
   location: {
-    type: string;
-    coordinates: [number, number];
+    lat: number;
+    lon: number;
   };
   interests: string[];
   details: LooseObject;
-};
+}

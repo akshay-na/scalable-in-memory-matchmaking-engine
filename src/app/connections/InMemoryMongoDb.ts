@@ -1,5 +1,5 @@
+import { RuntimeError } from "@akshay-na/exoframe/lib/common/RuntimeError";
 import { MongoMemoryServer } from "mongodb-memory-server";
-import { RuntimeError } from "src/lib/src/lib/common/RuntimeError";
 
 export type { MongoMemoryServer };
 
