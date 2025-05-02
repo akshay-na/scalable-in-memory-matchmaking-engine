@@ -6,8 +6,8 @@ import {
   Server,
 } from "@akshay-na/exoframe/lib/express/ExpressBuilder";
 
-import { InMemoryMongoDb } from "./connections/InMemoryMongoDb";
-import { MongoDBConnection } from "./connections/MongoDB";
+import { InMemoryMongoDb } from "../connections/InMemoryMongoDb";
+import { MongoDBConnection } from "../connections/MongoDB";
 
 //Import Routes
 import "./routers/routes/index";

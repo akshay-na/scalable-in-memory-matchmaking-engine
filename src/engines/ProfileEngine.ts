@@ -2,9 +2,9 @@ import { ObjectUtils } from "@akshay-na/exoframe/lib/common/ObjectUtils";
 import { UUID } from "@akshay-na/exoframe/lib/common/UUID";
 import { faker } from "@faker-js/faker";
 
+import { ProfileData } from "../app/types";
 import { INTEREST_POOL } from "../constants/Constants";
 import { ProfileController } from "../controllers/ProfileController";
-import { ProfileData } from "../types";
 import { Result } from "./types";
 
 export class ProfileEngine {

@@ -1,6 +1,6 @@
 import { RuntimeError } from "@akshay-na/exoframe/lib/common/RuntimeError";
 import ProfileModel, { IProfile } from "../models/ProfileModel";
-import { ProfileData } from "../types";
+import { ProfileData } from "../app/types";
 export class ProfileController {
   constructor() {}
 

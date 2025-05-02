@@ -8,7 +8,7 @@ import {
   RouteDescription,
 } from "@akshay-na/exoframe/lib/decorators/Route";
 import { ZodUtils } from "@akshay-na/exoframe/lib/zod/ZodUtils";
-import { ProfileEngine } from "../../engines/ProfileEngine";
+import { ProfileEngine } from "../../../engines/ProfileEngine";
 import { ProfileData } from "../../types";
 import { createProfileSchema } from "./schemas/CreateProfileBody";
 import { Seed } from "./schemas/SeedProfileQuery";
