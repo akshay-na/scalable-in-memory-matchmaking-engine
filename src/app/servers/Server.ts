@@ -1,8 +1,24 @@
-import { ENVIRONMENT } from "@akshay-na/exoframe/lib/common/Environment";
-import App from "../App";
+import Application from "../App";
 
-const PORT = ENVIRONMENT.get("PORT") ?? 8888;
+// Set environment variables for error handling and logging
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught exception:", err);
+  process.exit(1); // Exit the process with an error code
+});
 
-App().listen(PORT, () =>
-  console.log(`🚀 API ready on : http://localhost:${PORT}`)
-);
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled promise rejection:", reason);
+  process.exit(1); // Exit the process with an error code
+});
+
+const app = new Application();
+
+(async () => {
+  try {
+    await app.initialize();
+    app.startServer();
+  } catch (error) {
+    console.error("Failed to initialize app:", error);
+    process.exit(1); // Exit if initialization fails
+  }
+})();
