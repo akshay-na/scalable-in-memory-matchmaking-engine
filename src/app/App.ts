@@ -30,9 +30,9 @@ export default class Application {
 
   public async initialize(): Promise<Express> {
     try {
-      const inMemoryDb = await InMemoryMongoDb.getInstance();
+      await InMemoryMongoDb.getInstance();
       this.mongoDBConnection.connect(
-        ENVIRONMENT.get("DATABASE_URL") || inMemoryDb.uri
+        ENVIRONMENT.get("DATABASE_URL") || InMemoryMongoDb.uri
       );
       Application.application = this.expressBuilder.initialize();
       return Application.application;
@@ -74,6 +74,7 @@ export default class Application {
 
       // Gracefully disconnect from MongoDB
       await this.mongoDBConnection.disconnect();
+      await InMemoryMongoDb.stop();
 
       console.log("Server and services shut down.");
       process.exit(0);

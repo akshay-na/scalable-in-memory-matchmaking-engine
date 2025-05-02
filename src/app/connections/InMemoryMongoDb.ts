@@ -1,20 +1,31 @@
 import { MongoMemoryServer } from "mongodb-memory-server";
+import { RuntimeError } from "src/lib/src/lib/common/RuntimeError";
+
+export type { MongoMemoryServer };
 
 export class InMemoryMongoDb {
-  private constructor(private readonly mongoServer: MongoMemoryServer) {}
+  private static database: MongoMemoryServer | undefined;
 
-  public static async getInstance(): Promise<InMemoryMongoDb> {
-    const server = await MongoMemoryServer.create({
-      instance: { port: 55931 },
-    });
-    return new InMemoryMongoDb(server);
+  public constructor() {}
+
+  public static async getInstance(): Promise<MongoMemoryServer> {
+    if (!InMemoryMongoDb.database)
+      InMemoryMongoDb.database = await MongoMemoryServer.create({
+        instance: { port: 55931 },
+      });
+
+    return InMemoryMongoDb.database;
   }
 
-  public get uri(): string {
-    return this.mongoServer.getUri();
+  public static get uri(): string {
+    if (!InMemoryMongoDb.database)
+      throw new RuntimeError("IN_MEMORY_DB_NOT_INITIALIZED");
+    return InMemoryMongoDb.database.getUri();
   }
 
-  public async disconnect(): Promise<void> {
-    await this.mongoServer.stop();
+  public static async stop(): Promise<void> {
+    if (!InMemoryMongoDb.database)
+      throw new RuntimeError("IN_MEMORY_DB_NOT_INITIALIZED");
+    await InMemoryMongoDb.database.stop();
   }
 }
