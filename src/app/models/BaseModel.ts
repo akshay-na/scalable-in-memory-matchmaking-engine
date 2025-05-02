@@ -13,7 +13,7 @@ export class BaseModel {
     const schema = new Schema<T>({
       uuid: {
         type: String,
-        default: UUID.randomUUID(),
+        default: () => UUID.randomUUID(),
         unique: true,
       },
       createdAt: {
