@@ -23,6 +23,7 @@ export class Profile extends BaseModel {
         type: String,
         required: true,
         unique: true,
+        index: true,
       },
       age: {
         type: Number,

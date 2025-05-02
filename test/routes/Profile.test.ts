@@ -40,7 +40,7 @@ describe("PUT /api/v1/profile?seed=value", () => {
 
   it("should respond with error when seed number is higher than limit", async () => {
     const res = await request(app)
-      .put(`/api/v1/profile?seed=10005`)
+      .put(`/api/v1/profile?seed=100005`)
       .set("Accept", "application/json");
     expect(res.status).toBe(400); // Assuming these fields are required
     expect(res.body.error.error).toBe("VALIDATION_FAILED");

@@ -1,6 +1,6 @@
 import { RuntimeError } from "@akshay-na/exoframe/lib/common/RuntimeError";
-import ProfileModel, { IProfile } from "../models/ProfileModel";
 import { ProfileData } from "../app/types";
+import ProfileModel, { IProfile } from "../models/ProfileModel";
 export class ProfileController {
   constructor() {}
 
@@ -22,5 +22,28 @@ export class ProfileController {
 
   public async findById(profileId: string): Promise<IProfile | null> {
     return ProfileModel.findOne({ id: profileId });
+  }
+
+  public async findMatchingLocation(
+    profile: IProfile
+  ): Promise<IProfile[] | undefined> {
+    return ProfileModel.aggregate([
+      {
+        $geoNear: {
+          near: { type: "Point", coordinates: profile.location.coordinates },
+          distanceField: "distKm",
+          maxDistance: 50 * 1000,
+          distanceMultiplier: 0.001,
+          spherical: true,
+        },
+      },
+      {
+        $match: {
+          age: { $gte: profile.age - 10, $lte: profile.age + 10 },
+          gender: { $ne: profile.gender },
+          id: { $ne: profile.id },
+        },
+      },
+    ]);
   }
 }

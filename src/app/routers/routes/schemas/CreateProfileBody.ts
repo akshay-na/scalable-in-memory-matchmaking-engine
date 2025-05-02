@@ -1,3 +1,4 @@
+import { UUID } from "@akshay-na/exoframe/lib/common/UUID";
 import { z } from "@akshay-na/exoframe/lib/zod/ZodUtils";
 
 const locationSchema = z.object({
@@ -6,7 +7,7 @@ const locationSchema = z.object({
 });
 
 export const createProfileSchema = z.object({
-  id: z.string(),
+  id: z.string().regex(UUID.PATTERN, "INVALID_UUID"),
   age: z.number().min(0),
   gender: z.enum(["M", "F", "Other"]),
   location: locationSchema,
