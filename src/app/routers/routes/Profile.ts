@@ -42,12 +42,16 @@ export class ProfilesRoute {
   @ErrorMapping({ VALIDATION_FAILED: 400 })
   public async seedProfile(
     seed: number
-  ): Promise<{ total: number; value: any }> {
+  ): Promise<{ total: number; ids: string[]; value: any }> {
     try {
       const profileEngine = new ProfileEngine();
       ZodUtils.parse(Seed, Number(seed));
       const result = await profileEngine.seedProfile(seed);
-      return { total: result.value.length, value: result.value };
+      return {
+        total: result.value.length,
+        ids: result.value.map((e: any) => e.id),
+        value: result.value,
+      };
     } catch (error: any) {
       console.error(error);
       switch (error.id) {
