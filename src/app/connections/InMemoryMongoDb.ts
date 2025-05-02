@@ -4,7 +4,9 @@ export class InMemoryMongoDb {
   private constructor(private readonly mongoServer: MongoMemoryServer) {}
 
   public static async getInstance(): Promise<InMemoryMongoDb> {
-    const server = await MongoMemoryServer.create();
+    const server = await MongoMemoryServer.create({
+      instance: { port: 55931 },
+    });
     return new InMemoryMongoDb(server);
   }
 

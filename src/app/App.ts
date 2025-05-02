@@ -12,7 +12,7 @@ import "./routers/routes/index";
 
 export default class Application {
   private expressBuilder: ExpressBuilder;
-  private mongoDBConnection: MongoDBConnection | InMemoryMongoDb;
+  private mongoDBConnection: MongoDBConnection;
   private static application: Express;
   private static server: Server;
 
@@ -30,7 +30,10 @@ export default class Application {
 
   public async initialize(): Promise<Express> {
     try {
-      this.mongoDBConnection = await InMemoryMongoDb.getInstance();
+      const inMemoryDb = await InMemoryMongoDb.getInstance();
+      this.mongoDBConnection.connect(
+        ENVIRONMENT.get("DATABASE_URL") || inMemoryDb.uri
+      );
       Application.application = this.expressBuilder.initialize();
       return Application.application;
     } catch (error) {
