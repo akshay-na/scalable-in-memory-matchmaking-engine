@@ -79,6 +79,6 @@ export class MatchingEngine {
 
     if (!raw.length) return [];
 
-    return raw;
+    return raw.filter((value, index) => index % 2 === 0);
   }
 }

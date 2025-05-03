@@ -44,12 +44,13 @@ export class MatchPrecomputeWorker {
     private readonly topK: number,
     concurrency: number
   ) {
+    const workerconnection = redis.duplicate();
     this.queue = new Queue<IProfile>("match-precompute", { connection: redis });
 
     this.worker = new Worker<IProfile>(
       "match-precompute",
       this.processJob.bind(this),
-      { connection: redis, concurrency }
+      { connection: workerconnection, concurrency }
     );
   }
 
@@ -63,6 +64,9 @@ export class MatchPrecomputeWorker {
     const quad = QuadrantUtils.encode(profile.location.coordinates);
     const quads = QuadrantUtils.neighbours(quad);
 
+    quads.push(quad);
+    await this.redis.sadd(indexKey(quad), profile.id);
+
     const idSet = new Set<string>();
 
     for (const q of quads) {
@@ -75,10 +79,11 @@ export class MatchPrecomputeWorker {
     const candidates = await ProfileModel.find({
       id: { $in: [...idSet] },
     });
-
     /* score + upsert both ways */
+
     for (const candidate of candidates) {
       const score = this.engine.compositeScore(profile, candidate);
+
       if (score === 0) continue;
 
       await Promise.all([

@@ -42,7 +42,6 @@ export class RedisConnection {
 
       this.client.on("error", (err) => {
         console.error("Redis connection error:", err);
-        throw new RuntimeError("Could not connect to Redis");
       });
     } catch (error) {
       console.error("Redis connection error:", error);

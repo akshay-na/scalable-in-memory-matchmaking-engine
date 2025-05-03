@@ -49,6 +49,11 @@ export default class Application {
         ENVIRONMENT.get("REDIS_URL") || (await InMemoryRedis.uri())
       );
 
+      console.log(
+        "🚀 ~ App.ts:50 ~ Application ~ initialize ~  (await InMemoryRedis.uri()):",
+        await InMemoryRedis.uri()
+      );
+
       MatchPrecomputeWorker.init(this.redisConnection.getclient());
 
       Application.application = this.expressBuilder.initialize();

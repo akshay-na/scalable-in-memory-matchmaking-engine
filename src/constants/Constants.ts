@@ -89,3 +89,16 @@ export const INTEREST_POOL = [
   "entrepreneurship",
   "economics",
 ] as const;
+
+export const TEST_SEEDS = [
+  { lon: 82.75, lat: 22.5 },
+  { lon: 68.0, lat: 8.0 },
+  { lon: 97.5, lat: 8.0 },
+  { lon: 68.0, lat: 37.0 },
+  { lon: 97.5, lat: 37.0 },
+  { lon: 77.1025, lat: 28.7041 },
+  { lon: 72.8777, lat: 19.076 },
+  { lon: 77.5946, lat: 12.9716 },
+  { lon: 88.3639, lat: 22.5726 },
+  { lon: 80.2707, lat: 13.0827 },
+];

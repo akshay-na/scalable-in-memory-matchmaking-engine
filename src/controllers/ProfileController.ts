@@ -17,7 +17,9 @@ export class ProfileController {
       const record = await ProfileModel.create(profile);
 
       const worker = MatchPrecomputeWorker.getInstance();
-      await worker.queue.add("new-profile", record);
+      await worker.queue.add("new-profile", record.toJSON(), {
+        removeOnComplete: true,
+      });
 
       return record;
     } catch (error) {
@@ -27,7 +29,12 @@ export class ProfileController {
   }
 
   public async findById(profileId: string): Promise<IProfile | null> {
-    return ProfileModel.findOne({ id: profileId });
+    const profile = await ProfileModel.findOne({ id: profileId });
+    console.log(
+      "🚀 ~ ProfileController.ts:34 ~ ProfileController ~ findById ~ profile:",
+      profile
+    );
+    return profile;
   }
 
   public async findMatchingLocation(
