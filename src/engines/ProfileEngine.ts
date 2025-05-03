@@ -36,16 +36,16 @@ export class ProfileEngine {
     if (profile.age < 18)
       throw new RuntimeError("CANNOT_SERVE_MINOR", { profile });
 
-    const relevantProfiles =
-      await this.profileController.findMatchingLocation(profile);
+    const matchedProfilesId = await this.matchingEngine.topMatches(profile);
 
-    if (!relevantProfiles || relevantProfiles?.length === 0)
-      throw new RuntimeError("NO_PROFILE_IN_AREA", { userId });
+    if (!matchedProfilesId || matchedProfilesId?.length === 0)
+      throw new RuntimeError("NO_MATCH_FOUND", { userId });
 
-    const matchedProfiles = this.matchingEngine.topMatches(
-      profile,
-      relevantProfiles
-    );
+    const matchedProfiles: any[] = [];
+
+    matchedProfilesId.map(async (id) => {
+      matchedProfiles.push((await this.profileController.findById(id))!);
+    });
 
     return {
       ok: true,

@@ -1,6 +1,7 @@
 import { RuntimeError } from "@akshay-na/exoframe/lib/common/RuntimeError";
 import { ProfileData } from "../app/types";
 import ProfileModel, { IProfile } from "../models/ProfileModel";
+import { MatchPrecomputeWorker } from "../worker/MatchPrecomputeWorker";
 export class ProfileController {
   constructor() {}
 
@@ -13,7 +14,12 @@ export class ProfileController {
         },
       });
 
-      return await ProfileModel.create(profile);
+      const record = await ProfileModel.create(profile);
+
+      const worker = MatchPrecomputeWorker.getInstance();
+      await worker.queue.add("new-profile", record);
+
+      return record;
     } catch (error) {
       console.error(error);
       throw new RuntimeError("UNKNOWN_ERROR", { error });

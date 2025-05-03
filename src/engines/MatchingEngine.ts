@@ -1,3 +1,5 @@
+import { QuadrantUtils } from "@akshay-na/exoframe/lib/common/QuadrantUtils";
+import { RedisConnection } from "../connections/Redis";
 import { IProfile } from "../models/ProfileModel";
 
 export class MatchingEngine {
@@ -56,7 +58,7 @@ export class MatchingEngine {
     return intersection / union;
   }
 
-  private compositeScore(a: IProfile, b: IProfile): number {
+  public compositeScore(a: IProfile, b: IProfile): number {
     const wSum = this.INTEREST_WEIGHT + this.AGE_WEIGHT + this.DIST_WEIGHT;
 
     const score =
@@ -68,31 +70,15 @@ export class MatchingEngine {
     return score / wSum;
   }
 
-  public topMatches(
-    seed: IProfile,
-    candidates: IProfile[],
-    limit = 5
-  ): IProfile[] {
-    if (limit <= 0) return [];
+  public async topMatches(seed: IProfile): Promise<string[]> {
+    const key = `Q:${QuadrantUtils.encode(seed.location.coordinates)}:${seed.id}`;
 
-    type Scored = { p: IProfile; score: number };
-    const heap: Scored[] = [];
+    const raw = await RedisConnection.getInstance()
+      .getClient()
+      .zrevrange(key, 0, 4, "WITHSCORES");
 
-    const push = (entry: Scored): void => {
-      heap.push(entry);
-      heap.sort((a, b) => a.score - b.score);
-      if (heap.length > limit) heap.shift();
-    };
+    if (!raw.length) return [];
 
-    for (const p of candidates) {
-      if (p.id === seed.id) continue;
-      const score = this.compositeScore(seed, p);
-      if (score > 0) push({ p, score });
-    }
-
-    return heap
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit)
-      .map((s) => s.p);
+    return raw;
   }
 }
