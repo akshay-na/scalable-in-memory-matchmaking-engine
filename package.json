@@ -45,7 +45,8 @@
     "@faker-js/faker": "9.7.0",
     "ioredis": "5.6.1",
     "mongoose": "8.14.1",
-    "redis-memory-server": "0.12.1"
+    "redis-memory-server": "0.12.1",
+    "mongodb-memory-server": "10.1.4"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.6.0",
@@ -83,7 +84,6 @@
     "jest-junit": "16.0.0",
     "jest-pnp-resolver": "1.2.3",
     "lint-staged": "^15.2.10",
-    "mongodb-memory-server": "10.1.4",
     "prettier": "^3.3.3",
     "semantic-release": "^24.2.0",
     "supertest": "^7.0.0",
