@@ -1,0 +1,117 @@
+# Spark
+
+> High‑performance Node.js application managed with **pnpm** workspaces.
+
+## Matching Engine — Architecture Note
+
+Context – Real‑time recommendations require sub‑10 ms reads. We therefore pre‑compute top‑K candidate matches in the background and store them in Redis for O(log K) access at request time.
+
+### 1. High‑level Flow
+
+```mermaid
+HTTP → controller → pnpm queue:add <profile>
+              │
+              ▼
+    BullMQ queue  ──▶  MatchPrecomputeWorker (N × concurrency)
+                        ├─ fetch neighbouring userIds from Redis
+                        ├─ hydrate profiles from MongoDB
+                        ├─ score with MatchingEngine
+                        └─ upsert symmetric scores into ZSETs
+```
+
+1. Write‑path (slow lane) – whenever a user profile is created or updated, a job is queued.
+2. Worker evaluates the profile against nearby candidates and maintains the sorted sets.
+3. Read‑path (fast lane) – the application fetches ZREVRANGE Q:<quad>:<uid> 0 <K‑1> and returns matches without touching the database.
+
+###  2. Spatial Partitioning
+
+Concept | Description
+
+QuadrantUtils.encode(coords)  | Projects lat/lon to an integer "quad" (a fixed‑size grid cell).
+
+neighbours(quad) | Returns the 8 adjacent quads so we don’t cut matches on cell borders.
+
+Rationale: a 2‑level geohash would be too coarse; fixed 250 m cells balance locality vs. index size (≈24 B per user ID in Redis).
+
+### 3. Redis Keyspace
+
+Key pattern | Type | TTL | Purpose
+
+IDX:<quad> | SET | ∞ | unordered list of user IDs currently in that cell
+
+Q:<quad>:<uid> | ZSET | configurable (e.g. 24 h) | uid’s top‑K matches scoped to quad
+
+Sorted‑set score = MatchingEngine.compositeScore() (higher = better). ZREMRANGEBYRANK key 0 -(K+1) caps the size.
+
+Why per‑quad ZSETs? It splits the hot key problem: instead of one giant matches:<uid>, we maintain shards by geography, which scales linearly with population density.
+
+---
+
+## Prerequisites
+
+| Tool              | Version                        | Notes                                 |
+| ----------------- | ------------------------------ | ------------------------------------- |
+| **Git**           | ≥ 2.40                         | clone & version control               |
+| **Node.js**       | see `.nvmrc` / `.node-version` | use a version manager (`nvm`, `asdf`) |
+| **pnpm**          | ≥ 9.0                          | enable via `corepack enable`          |
+| Docker (optional) | _latest_                       | run the app in a container            |
+
+```bash
+# one‑off with nvm
+a) nvm install       # installs the version from .nvmrc
+b) nvm use           # switches your shell to that version
+```
+
+---
+
+## Getting Started
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/your‑org/spark.git
+cd spark
+
+# 2. Switch to the correct Node version (if you haven’t already)
+nvm use   # or `asdf install && asdf shell nodejs $(cat .tool-versions)`
+
+# 3. Install dependencies
+pnpm install
+
+# 4. Run the development server
+pnpm start
+```
+
+The app boots on **[http://localhost:8888](http://localhost:8888)** by default. Runtime configuration is loaded from an `.env` file—copy `.env.example` to `.env` and adjust as necessary.
+
+---
+
+## Common pnpm Scripts
+
+| Command        | Description                                                    |
+| -------------- | -------------------------------------------------------------- |
+| `pnpm start`   | Transpiles (if needed) & starts the app in watch mode          |
+| `pnpm build`   | Creates an optimized production build in `dist/`               |
+| `pnpm test`    | Runs Jest unit tests with coverage                             |
+| `pnpm lint`    | Runs ESLint & Prettier checks                                  |
+| `pnpm release` | Generates a semantic release (tags, changelog, GitHub release) |
+
+---
+
+## Husky Git Hooks
+
+The `.husky/` directory contains Git hooks installed automatically after `pnpm install`.
+
+| Hook         | What it runs                               | Purpose                                                              |
+| ------------ | ------------------------------------------ | -------------------------------------------------------------------- |
+| `pre-commit` | `pnpm lint && pnpm test --passWithNoTests` | Prevents style & test regressions from landing in `main`.            |
+| `commit-msg` | `commitlint --edit $1`                     | Rejects commit messages that do not follow **Conventional Commits**. |
+
+> **Why Husky?** Re‑usable, project‑level hooks make it impossible to “forget” local checks and keep the CI pipeline green.
+
+---
+
+## License
+
+[MIT](LICENSE)
+
+---
