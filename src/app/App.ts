@@ -13,6 +13,7 @@ import { RedisConnection } from "../connections/Redis";
 
 //Import Routes
 
+import { MatchPrecomputeWorker } from "../worker/MatchPrecomputeWorker";
 import "./routers/routes/index";
 
 export default class Application {
@@ -47,6 +48,8 @@ export default class Application {
       await this.redisConnection.connect(
         ENVIRONMENT.get("REDIS_URL") || (await InMemoryRedis.uri())
       );
+
+      MatchPrecomputeWorker.init(this.redisConnection.getclient());
 
       Application.application = this.expressBuilder.initialize();
       return Application.application;

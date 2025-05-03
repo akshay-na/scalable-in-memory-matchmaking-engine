@@ -14,6 +14,11 @@ export class RedisConnection {
     return RedisConnection.instance;
   }
 
+  public getclient(): RedisClient {
+    if (!this.client) throw new RuntimeError("REDIS_NOT_CONNECTED");
+    return this.client;
+  }
+
   public async connect(uri: string): Promise<void> {
     if (this.client) {
       console.log("Already connected to Redis.");
@@ -26,7 +31,7 @@ export class RedisConnection {
           console.log("Redis reconnect error:", err);
           return true;
         },
-        maxRetriesPerRequest: 3,
+        maxRetriesPerRequest: null,
         enableReadyCheck: false,
         connectTimeout: 10000,
       });
