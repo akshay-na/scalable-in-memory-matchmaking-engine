@@ -22,12 +22,12 @@ export class InMemoryRedis {
     return InMemoryRedis.server;
   }
 
-  public static get uri(): string {
+  public static async uri(): Promise<string> {
     if (!InMemoryRedis.server)
       throw new RuntimeError("IN_MEMORY_REDIS_NOT_INITIALIZED");
 
-    const host = InMemoryRedis.server.getHost();
-    const port = InMemoryRedis.server.getPort();
+    const host = await InMemoryRedis.server.getHost();
+    const port = await InMemoryRedis.server.getPort();
     return `redis://${host}:${port}`;
   }
 

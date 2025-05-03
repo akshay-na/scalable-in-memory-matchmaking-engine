@@ -45,7 +45,7 @@ export default class Application {
       );
 
       this.redisConnection.connect(
-        ENVIRONMENT.get("REDIS_URL") || InMemoryRedis.uri
+        ENVIRONMENT.get("REDIS_URL") || (await InMemoryRedis.uri())
       );
 
       Application.application = this.expressBuilder.initialize();
