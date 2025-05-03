@@ -30,10 +30,6 @@ export class ProfileController {
 
   public async findById(profileId: string): Promise<IProfile | null> {
     const profile = await ProfileModel.findOne({ id: profileId });
-    console.log(
-      "🚀 ~ ProfileController.ts:34 ~ ProfileController ~ findById ~ profile:",
-      profile
-    );
     return profile;
   }
 

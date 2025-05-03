@@ -44,13 +44,12 @@ export class MatchPrecomputeWorker {
     private readonly topK: number,
     concurrency: number
   ) {
-    const workerconnection = redis.duplicate();
     this.queue = new Queue<IProfile>("match-precompute", { connection: redis });
 
     this.worker = new Worker<IProfile>(
       "match-precompute",
       this.processJob.bind(this),
-      { connection: workerconnection, concurrency }
+      { connection: redis, concurrency }
     );
   }
 

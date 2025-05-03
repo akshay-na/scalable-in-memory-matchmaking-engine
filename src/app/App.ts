@@ -68,6 +68,8 @@ export default class Application {
     if (!Application.application)
       throw new RuntimeError("App not initialized yet!");
 
+    MatchPrecomputeWorker.getInstance().close();
+
     await this.mongoDBConnection.disconnect();
     await this.redisConnection.disconnect();
 
