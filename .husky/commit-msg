@@ -1,2 +1,17 @@
-npx --no-install commitlint --edit "$1"
-echo
+echo ""
+echo "📝 Validating commit message..."
+
+if npx --no-install commitlint --edit "$1"; then
+  echo ""
+  echo "✅ Commit message is valid."
+  echo ""
+  exit 0
+else
+  echo ""
+  echo "❌ Invalid commit message. Commit aborted."
+  echo ""
+  echo "🔧 Please follow the commit message convention (e.g., Conventional Commits)."
+  echo "   Example: feat(auth): add login endpoint"
+  echo ""
+  exit 1
+fi
