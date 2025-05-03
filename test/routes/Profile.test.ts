@@ -9,7 +9,7 @@ describe("POST /api/v1/profile", () => {
         age: 28,
         gender: "M",
         location: { lat: 13.7563, lon: 100.5018 },
-        interests: ["music", "art", "travel"],
+        interests: ["music", "art", "travel", "cricket", "gaming"],
       })
       .set("Accept", "application/json");
     expect(res.status).toBe(200);
