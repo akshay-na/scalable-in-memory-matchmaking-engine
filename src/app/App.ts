@@ -40,11 +40,11 @@ export default class Application {
       await InMemoryMongoDb.getInstance();
       await InMemoryRedis.getInstance();
 
-      this.mongoDBConnection.connect(
+      await this.mongoDBConnection.connect(
         ENVIRONMENT.get("DATABASE_URL") || InMemoryMongoDb.uri
       );
 
-      this.redisConnection.connect(
+      await this.redisConnection.connect(
         ENVIRONMENT.get("REDIS_URL") || (await InMemoryRedis.uri())
       );
 
