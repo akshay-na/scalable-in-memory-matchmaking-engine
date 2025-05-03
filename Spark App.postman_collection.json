@@ -1,0 +1,89 @@
+{
+  "info": {
+    "_postman_id": "8fb65e0a-8334-46e8-bdd8-a02f53e2b280",
+    "name": "Spark App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "40544451"
+  },
+  "item": [
+    {
+      "name": "Create Profile",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n\t\"id\": \"bf500ef2-4733-4437-bee7-af3212812b70\",\n\t\"age\": 28,\n\t\"gender\": \"M\",\n\t\"location\": {\n\t\t\"lat\": 13.7563,\n\t\t\"lon\": 100.5018\n\t},\n\t\"interests\": [\n\t\t\"music\",\n\t\t\"art\",\n\t\t\"travel\",\n\t\t\"cricket\",\n\t\t\"gaming\"\n\t]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{local_server}}/api/v1/profile",
+          "host": ["{{local_server}}"],
+          "path": ["api", "v1", "profile"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Seed Profiles",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "url": {
+          "raw": "{{local_server}}/api/v1/profile?seed=100",
+          "host": ["{{local_server}}"],
+          "path": ["api", "v1", "profile"],
+          "query": [
+            {
+              "key": "seed",
+              "value": "100"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Matchs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{local_server}}/api/v1/match/4a935aa5-7237-4e14-8d7e-957330f6d00e",
+          "host": ["{{local_server}}"],
+          "path": ["api", "v1", "match", "4a935aa5-7237-4e14-8d7e-957330f6d00e"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "local_server",
+      "value": "http://localhost:8888",
+      "type": "string"
+    }
+  ]
+}
