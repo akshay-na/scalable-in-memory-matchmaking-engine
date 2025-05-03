@@ -23,23 +23,23 @@ HTTP → controller → pnpm queue:add <profile>
 2. Worker evaluates the profile against nearby candidates and maintains the sorted sets.
 3. Read‑path (fast lane) – the application fetches ZREVRANGE Q:<quad>:<uid> 0 <K‑1> and returns matches without touching the database.
 
-###  2. Spatial Partitioning
+### 2. Spatial Partitioning
 
-Concept | Description
-
-QuadrantUtils.encode(coords)  | Projects lat/lon to an integer "quad" (a fixed‑size grid cell).
-
-neighbours(quad) | Returns the 8 adjacent quads so we don’t cut matches on cell borders.
+| Concept                              | Description                                                            |
+| ------------------------------------ | ---------------------------------------------------------------------- |
+| **QuadrantUtils.encode(coords)**     | Projects lat/lon to an integer "quad" (a fixed‑size grid cell).        |
+| **neighbours(quad)**                 | Returns the 8 adjacent quads so we don’t cut matches on cell borders.  |
+| ------------------------------------ | ---------------------------------------------------------------------- |
 
 Rationale: a 2‑level geohash would be too coarse; fixed 250 m cells balance locality vs. index size (≈24 B per user ID in Redis).
 
 ### 3. Redis Keyspace
 
-Key pattern | Type | TTL | Purpose
-
-IDX:<quad> | SET | ∞ | unordered list of user IDs currently in that cell
-
-Q:<quad>:<uid> | ZSET | configurable (e.g. 24 h) | uid’s top‑K matches scoped to quad
+| Key pattern                          | Type    | TTL                             | Purpose                                           |
+| ------------------------------------ | ------- | ------------------------------- | ------------------------------------------------- |
+| IDX:<quad>                           | SET     | ∞                               | unordered list of user IDs currently in that cell |
+| Q:<quad>:<uid>                       | ZSET    | configurable (e.g. 24 h)        | uid’s top‑K matches scoped to quad                |
+| ------------------------------------ | ------- | ------------------------------- | ------------------------------------------------- |
 
 Sorted‑set score = MatchingEngine.compositeScore() (higher = better). ZREMRANGEBYRANK key 0 -(K+1) caps the size.
 
